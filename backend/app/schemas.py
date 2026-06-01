@@ -25,6 +25,16 @@ class TokenResponse(BaseModel):
     token_type: str
     user: UserResponse
 
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+class MessageResponse(BaseModel):
+    message: str
+
 # BUSINESS SCHEMAS
 class BusinessCreate(BaseModel):
     business_name: str

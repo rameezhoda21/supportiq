@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '../lib/api';
+import { CheckCircle2, FileText } from 'lucide-react';
 
 interface Document {
   id: number;
@@ -35,24 +36,42 @@ export default function DocumentList({ refreshCounter }: { refreshCounter?: numb
     fetchDocs();
   }, [refreshCounter]);
 
-  if (loading) return <div className="mt-8 text-gray-500">Loading documents...</div>;
-  if (error) return <div className="mt-8 text-red-500">{error}</div>;
-  if (documents.length === 0) return <div className="mt-8 text-gray-500">No documents uploaded yet.</div>;
+  if (loading) return <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6 text-sm text-gray-500 shadow-sm">Loading documents...</div>;
+  if (error) return <div className="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-700">{error}</div>;
+  if (documents.length === 0) {
+    return (
+      <div className="mt-6 rounded-lg border border-gray-200 bg-white p-10 text-center shadow-sm">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 text-gray-500">
+          <FileText className="h-6 w-6" aria-hidden="true" />
+        </div>
+        <h3 className="mt-4 text-sm font-semibold text-gray-950">No documents yet</h3>
+        <p className="mt-1 text-sm text-gray-500">Upload your first PDF or TXT file to start powering answers.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="mt-8 bg-white shadow overflow-hidden sm:rounded-md">
-      <ul className="divide-y divide-gray-200">
+    <div className="mt-6 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="border-b border-gray-200 px-5 py-4">
+        <h2 className="text-base font-semibold text-gray-950">Indexed documents</h2>
+        <p className="mt-1 text-sm text-gray-500">{documents.length} files available to the chatbot.</p>
+      </div>
+      <ul className="divide-y divide-gray-100">
         {documents.map((doc) => (
-          <li key={doc.id} className="px-4 py-4 sm:px-6">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-indigo-600 truncate">{doc.file_name}</p>
-              <div className="ml-2 flex-shrink-0 flex items-center gap-4">
-                <span className="text-xs text-gray-500">
-                  {new Date(doc.created_at).toLocaleString()}
-                </span>
-                <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  Processed
-                </p>
+          <li key={doc.id} className="px-5 py-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500">
+                  <FileText className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-gray-950">{doc.file_name}</p>
+                  <p className="mt-1 text-xs text-gray-500">{new Date(doc.created_at).toLocaleString()}</p>
+                </div>
+              </div>
+              <div className="inline-flex w-fit items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                Processed
               </div>
             </div>
           </li>
