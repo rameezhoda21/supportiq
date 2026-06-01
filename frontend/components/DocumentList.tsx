@@ -8,15 +8,21 @@ interface Document {
   created_at: string;
 }
 
-export default function DocumentList() {
+export default function DocumentList({ refreshCounter }: { refreshCounter?: number }) {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchDocs() {
+      const businessId = localStorage.getItem('selected_business_id');
+      if (!businessId) {
+        setError('No business selected.');
+        setLoading(false);
+        return;
+      }
       try {
-        const res = await fetch(`${BASE_URL}/documents/1`); // Hardcoded business_id=1 for MVP
+        const res = await fetch(`${BASE_URL}/documents/${businessId}`);
         if (!res.ok) throw new Error('Failed to fetch documents');
         const data = await res.json();
         setDocuments(data);
@@ -27,7 +33,7 @@ export default function DocumentList() {
       }
     }
     fetchDocs();
-  }, []);
+  }, [refreshCounter]);
 
   if (loading) return <div className="mt-8 text-gray-500">Loading documents...</div>;
   if (error) return <div className="mt-8 text-red-500">{error}</div>;

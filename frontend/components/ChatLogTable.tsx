@@ -18,8 +18,15 @@ export default function ChatLogTable() {
 
   useEffect(() => {
     async function fetchLogs() {
+      const businessId = localStorage.getItem('selected_business_id');
+      if (!businessId) {
+        setError('No business selected.');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`${BASE_URL}/chat/logs/1`); // Hardcoded business_id=1 for MVP
+        const res = await fetch(`${BASE_URL}/chat/logs/${businessId}`);
         if (!res.ok) throw new Error('Failed to fetch chat logs');
         const data = await res.json();
         setLogs(data);
