@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from app.database import get_db
-from app.models import Document, DocumentChunk
+from app.models import Document, DocumentChunk, Business
 from app.services.document_service import extract_text_from_pdf, extract_text_from_txt, chunk_text
 from app.services.embedding_service import generate_embedding
 from app.services.vector_store import upsert_document_chunks
@@ -18,6 +18,10 @@ async def upload_document(
 ):
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
+        
+    business = db.query(Business).filter(Business.id == business_id).first()
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
         
     try:
         # 1. Read file contents

@@ -8,6 +8,10 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 class UserResponse(BaseModel):
     id: int
     name: str
@@ -15,6 +19,11 @@ class UserResponse(BaseModel):
     created_at: datetime
     class Config:
         from_attributes = True
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserResponse
 
 # BUSINESS SCHEMAS
 class BusinessCreate(BaseModel):

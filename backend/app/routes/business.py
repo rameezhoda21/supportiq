@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -25,3 +26,8 @@ def get_business(business_id: int, db: Session = Depends(get_db)):
     if not b:
         raise HTTPException(status_code=404, detail="Business not found")
     return b
+
+@router.get("/user/{user_id}", response_model=List[BusinessResponse])
+def get_user_businesses(user_id: int, db: Session = Depends(get_db)):
+    businesses = db.query(Business).filter(Business.user_id == user_id).all()
+    return businesses
