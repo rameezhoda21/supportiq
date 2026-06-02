@@ -28,9 +28,7 @@ export default function ChatWindow({ businessId }: { businessId: string }) {
       const response = await fetch(`${BASE_URL}/chat/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Use business_id = 1 for MVP local testing overrides incoming string if needed, 
-        // though incoming is likely default passing. Ensuring 1 as a number
-        body: JSON.stringify({ business_id: 1, question: currentInput }),
+        body: JSON.stringify({ business_id: Number(businessId), question: currentInput }),
       });
       const data = await response.json();
 

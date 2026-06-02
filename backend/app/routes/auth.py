@@ -1,4 +1,5 @@
 import hashlib
+import os
 import secrets
 from datetime import datetime, timedelta
 
@@ -17,6 +18,7 @@ from app.schemas import (
     UserResponse,
 )
 from app.security import hash_password, verify_password, create_access_token
+from app.services.email_service import send_password_reset_email
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -108,9 +110,13 @@ def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db
 
     if user:
         raw_token = create_password_reset_token(db, user)
-        reset_link = f"http://localhost:3000/reset-password?token={raw_token}"
+        frontend_base_url = os.getenv("FRONTEND_BASE_URL", "http://localhost:3000")
+        reset_link = f"{frontend_base_url.rstrip('/')}/reset-password?token={raw_token}"
         print(f"Password reset link: {reset_link}")
-        # TODO: Send this reset link through SendGrid, Resend, or AWS SES in production.
+        try:
+            send_password_reset_email(user.email, reset_link)
+        except Exception as exc:
+            print(f"Password reset email was not sent: {exc}")
 
     return {"message": PASSWORD_RESET_MESSAGE}
 

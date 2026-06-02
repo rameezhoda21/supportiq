@@ -26,7 +26,7 @@ class TokenResponse(BaseModel):
     user: UserResponse
 
 class ForgotPasswordRequest(BaseModel):
-    email: str
+    email: EmailStr
 
 class ResetPasswordRequest(BaseModel):
     token: str
@@ -46,9 +46,28 @@ class BusinessResponse(BaseModel):
     user_id: int
     business_name: str
     business_slug: str
+    website_url: Optional[str] = None
     created_at: datetime
     class Config:
         from_attributes = True
+
+class AdminBusinessResponse(BaseModel):
+    id: int
+    user_id: int
+    owner_name: str
+    owner_email: EmailStr
+    business_name: str
+    business_slug: str
+    website_url: Optional[str] = None
+    document_count: int
+    chat_count: int
+    created_at: datetime
+
+class AdminStatsResponse(BaseModel):
+    total_users: int
+    total_businesses: int
+    total_documents: int
+    total_chats: int
 
 # CHAT SCHEMAS
 class ChatRequest(BaseModel):

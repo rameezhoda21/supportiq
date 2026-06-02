@@ -63,6 +63,96 @@ Many small businesses cannot afford advanced customer support tools. SupportIQ s
 
 ---
 
+## Local Setup
+
+### Backend
+
+```bash
+cd backend
+cp .env.example .env
+python -m venv venv
+source venv/Scripts/activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
+
+The backend runs at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger docs:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Database health:
+
+```text
+GET http://127.0.0.1:8000/health/database
+```
+
+SQLite is used locally by default through:
+
+```text
+DATABASE_URL=sqlite:///./supportiq.db
+```
+
+To use PostgreSQL later, update `DATABASE_URL` in `backend/.env`.
+
+### Frontend
+
+```bash
+cd frontend
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+The frontend runs at:
+
+```text
+http://localhost:3000
+```
+
+### Admin Portal
+
+The admin portal is available at:
+
+```text
+http://localhost:3000/admin
+```
+
+For local development, use the admin key from `backend/.env`:
+
+```text
+ADMIN_API_KEY=dev-admin-key
+```
+
+The admin portal can:
+
+- Verify the SQL database connection
+- Show total users, businesses, documents, and chats
+- List every registered business with owner email, document count, and chat count
+
+Admin API endpoints:
+
+```text
+GET /admin/health/database
+GET /admin/stats
+GET /admin/businesses
+```
+
+All admin API calls require this header:
+
+```text
+X-Admin-Key: your-admin-key
+```
+
+---
+
 ## Architecture
 
 ```text

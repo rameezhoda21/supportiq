@@ -11,6 +11,8 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
+            <Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link>
+            <Link href="/admin" className="text-gray-600 hover:text-gray-900">Admin</Link>
             <Link href="/login" className="text-gray-600 hover:text-gray-900">Login</Link>
             <Link href="/register" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Register</Link>
           </div>

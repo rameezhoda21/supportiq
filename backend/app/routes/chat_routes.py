@@ -16,7 +16,7 @@ def ask_question(request: ChatRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Business not found")
         
     # Execute steps 1 through 7 inside the orchestrated rag_service pipeline 
-    rag_result = ask_rag_pipeline(request.business_id, request.question)
+    rag_result = ask_rag_pipeline(request.business_id, request.question, db)
     
     # 8. Save the chat log in PostgreSQL
     save_chat_log(
